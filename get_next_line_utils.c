@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 00:43:45 by mfouadi           #+#    #+#             */
-/*   Updated: 2022/12/07 05:40:04 by mfouadi          ###   ########.fr       */
+/*   Updated: 2022/12/07 06:30:33 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void	*ft_memchr(const void *s, int c, size_t n)
 	}
 	return (p);
 }
+
 
 // int main()
 // {

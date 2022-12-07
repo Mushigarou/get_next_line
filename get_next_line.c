@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 00:43:42 by mfouadi           #+#    #+#             */
-/*   Updated: 2022/12/07 06:22:47 by mfouadi          ###   ########.fr       */
+/*   Updated: 2022/12/07 06:30:30 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ char	*get_next_line(int fd)
 		// printf("%zu\n", len);
 		len--;
 	}
+	
 	if (bytes < 0)
 		return (free(p), "bytes < 0");
 	else if (bytes == 0)
