@@ -1,7 +1,9 @@
 a.out
-DS_store
+.DS_Store
 t.txt
 te.txt
 *.a
 *.o
 test/
+.vscode/
+a.out.dSYM/
