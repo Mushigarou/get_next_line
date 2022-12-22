@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 00:43:42 by mfouadi           #+#    #+#             */
-/*   Updated: 2022/12/16 05:58:19 by mfouadi          ###   ########.fr       */
+/*   Updated: 2022/12/22 11:39:57 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,191 +17,136 @@
 */
 
 #include "get_next_line.h"
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 100
+# endif // BUFFER_SIZE
 
-static	char	*ft_realloc(char *p)
+/*removing the line that was returned for the static var*/
+char	*free_line(char	*p)
 {
+	size_t	i;
+	size_t	len;
+	char	*rest;
+	char	*tmp;
+	
 	if (!p)
 		return (NULL);
-	else if(*p == '\n')
-		return (++p);
-	else if (*p == '\0')
-		{
-			*p = '\0';
-			return (p);
-		}
-	else
-	// printf("p IN = %s\n", p);
-		while (*p != '\n' && p != '\0')
-			p = p + 1;
-	// printf("p OUT = %s\n", p);
-	return (p);
+	tmp = ft_strchr(p, '\n');
+	if (!tmp)
+		return (p);
+	len = ft_strlen(tmp);
+	if (len == 0)
+		return (NULL);
+	rest = (char *)malloc(len + 1);
+	if (!rest)
+		return (NULL); // maybe freeing p, here
+	i = 0;
+	while (len)
+	{
+		rest[i] = tmp[i];
+		i++;
+		len--;
+	}
+	rest[i] = 0;
+	free(p);
+	return (rest);
 }
 
-char	*find_line(char *p)
+/*retriving the line to be returned*/
+char	*_line_(char *p)
 {
-	char	*line;
 	size_t	i;
-
+	long	len;
+	char	*line;
+	
 	if (!p)
+		return (NULL);
+	line = ft_strchr(p, '\n');
+	if (!line)
+		return (p);
+	len = line - p;
+	// printf("%ld", len);
+	line = (char *)malloc(len + 2);
+	if (!line)
 		return (NULL);
 	i = 0;
-	if ((i = ft_strchr(p, '\n')) >= 0)
+	while (p[i] && len--)
 	{
-		line = (char *)ft_calloc(i + NULL_CHAR + 1, 1);
-		if (!line)
-			return (NULL);
-		line = (char *)ft_memcpy(line, p, i);
-		line[i++] = '\n';
-		line[i] = '\0';
-		return (line);
+		line[i] = p[i];
+		i++;
 	}
-	if (*p == '\0')
-		*p = '\0';
-	return (p);
+	// line[i++] = '\n';
+	line[i] = 0;
+	return (line);
 }
 
+/*Read from fd untill encountring '\n' or EOF*/
 char	*read_fd(char *p, int fd)
 {
-	char			*tmp;
-	int				bytes;
+	char	*tmp;
+	int		bytes;
 
-	bytes = 0;
-
-	while (1)
+	bytes = 1;
+	while (bytes > 0)
 	{
-		tmp = (char *)ft_calloc(BUFFER_SIZE + 1, 1);
+		tmp = (char *)malloc(BUFFER_SIZE + 1);
 		if (!tmp)
 			return (NULL);
 		bytes = read(fd, tmp, BUFFER_SIZE);
-		if (bytes < 0)
-			return (free(tmp), free(p), NULL);
-		else if (bytes == 0)
-			return (free(tmp), p);
-		p  = ft_strjoin(p, tmp);
-		//  printf("p = %s\n", p);
-		if (ft_strchr(tmp, '\n') >= 0)
-			return (free(tmp), p);
+		if (bytes == 0)
+			return (free(tmp), NULL);
+		tmp[bytes] = 0;
+		// printf("$ tmp == %s$", tmp);
+		p = ft_strjoin(p, tmp);
+		if (ft_strchr(p, '\n'))
+			break;
 		free(tmp);
-		tmp = NULL;
-		// printf("p = %s", p);
-		// printf("%d\n", bytes);
-		// printf("%s\n", tmp);
 	}
-	// printf("tmp 2 = %s\n", tmp);
 	return (p);
 }
-char *get_next_line(int fd)
+
+char	*get_next_line(int fd)
 {
 	static	char	*p;
 	char			*line;
 
-	if (BUFFER_SIZE < 0 || read(fd, 0, 0) < 0 || fd < 0)
-		return (NULL);
+	if (fd < 0 || read(fd, 0, 0) < 0 || BUFFER_SIZE <= 0)
+		return (NULL);	
 	p = read_fd(p, fd);
-	// printf("p = %s\n", p);
 	if (!p)
 		return (NULL);
-	line = find_line(p);
-
-	p = ft_realloc(p);
-	if (*p == '\0')
-		line = NULL;
-	// printf("line = %s\n", line);
+	line = _line_(p);
+	// printf("$p == %s$", p);
+	p = free_line(p);
+	// printf("$p == %s$", p);
 	return (line);
 }
 
-// PROBLEMS : 
-//	1 - if no newline is found, it returns nothing
-// 2 - Timeout with while()
-// 3 - even if it's called many times it returns only the first line
+// #define M
+#ifdef M
 
-int main()
+int	main()
 {
-	int	fd = 0;
+	char	*s;
+	int		fd;
+	
+	fd = open("te.txt", O_RDONLY);
 
-	fd = open("get_next_line_utils.c", O_RDONLY);
-
-	char *s;
-	while((s = get_next_line(fd)))
-		{
-			printf("%s", s);
-			// sleep(1);
-		}
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s", get_next_line(fd));
-	// printf("%s\n\n", get_next_line(fd));
-	// static char *s;
-	// printf("%s", read_fd(s, fd));
-	// printf("%s", read_fd(s, fd));
-
-	// printf("%s", read_fd(s, fd));
-
-
+	while (1)
+	{
+		s = get_next_line(fd);
+		if (!s)
+			break;
+		printf("%s", s);
+		sleep(1);
+		free(s);
+	}
+	// printf("%s", (s = get_next_line(fd)));	
+	// free(s);
+	// printf("%s", (s = get_next_line(fd)));	
+	// free(s);
+	// printf("%s", (s = get_next_line(fd)));	
+	// free(s);
+	return (0);
 }
-
-// char	*test(char *p)
-// {
-// 	p++;
-// 	return (p);
-// }
-
-// int	main()
-// {
-// 	// static	char	*s = "hello";
-
-// 	// while (*s)
-// 	// 	{
-// 	// 		printf("%s\n", test(s));
-// 	// 		s++;
-// 	// 	}
-	
-	
-// }
+#endif // M
