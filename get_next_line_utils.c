@@ -6,10 +6,9 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 00:43:45 by mfouadi           #+#    #+#             */
-/*   Updated: 2022/12/23 07:45:14 by mfouadi          ###   ########.fr       */
+/*   Updated: 2022/12/23 12:02:09 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 /***
  * if read() reads NULL it doesn't return what is left
@@ -24,8 +23,8 @@ char	*ft_strchr(const char *s, int c)
 {
 	int	i;
 
-    if (!s)
-        return (NULL);
+	if (!s)
+		return (NULL);
 	i = 0;
 	while (*s != '\0')
 	{
@@ -42,8 +41,8 @@ size_t	ft_strlen(const char *s)
 {
 	size_t	i;
 
-    if (!s)
-        return (0);
+	if (!s)
+		return (0);
 	i = 0;
 	while (s[i] != '\0')
 		i++;
@@ -55,8 +54,8 @@ char	*ft_strdup(const char *s1)
 	char	*ptr1;
 	size_t	s1_len;
 
-    if (!s1)
-        return (NULL);
+	if (!s1)
+		return (NULL);
 	s1_len = ft_strlen(s1);
 	ptr1 = (char *)malloc(s1_len + NULL_CHAR);
 	if (ptr1 == (void *)0)
@@ -71,13 +70,13 @@ char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*str;
 	size_t	len;
-	
+
 	if (!s1)
 		return (ft_strdup(s2));
-	len  = ft_strlen(s1) + ft_strlen(s2);
+	len = ft_strlen(s1) + ft_strlen(s2);
 	str = (char *)malloc(len + 1);
 	if (!str)
-		return (free(s1), NULL);
+		return (NULL);
 	str = ft_strcat(s1, s2, str, len);
 	return (str);
 }
@@ -86,7 +85,7 @@ char	*ft_strcat(char *s1, char *s2, char *str, size_t len)
 {
 	int		i;
 	int		j;
-	
+
 	i = -1;
 	while (s1[++i])
 		str[i] = s1[i];
@@ -94,5 +93,5 @@ char	*ft_strcat(char *s1, char *s2, char *str, size_t len)
 	while (s2[j])
 		str[i++] = s2[j++];
 	str[len] = '\0';
-	return (free(s1), str);
+	return (str);
 }

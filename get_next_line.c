@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 00:43:42 by mfouadi           #+#    #+#             */
-/*   Updated: 2022/12/23 07:50:36 by mfouadi          ###   ########.fr       */
+/*   Updated: 2022/12/23 12:00:29 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,10 @@
 */
 
 #include "get_next_line.h"
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1
-# endif // BUFFER_SIZE
+
+#ifndef BUFFER_SIZE
+# define BUFFER_SIZE 1
+#endif // BUFFER_SIZE
 
 /*removing the line that was returned for the static var*/
 
@@ -29,7 +30,7 @@ char	*free_line(char	*p)
 	size_t	len;
 	char	*rest;
 	char	*tmp;
-	
+
 	if (!p)
 		return (NULL);
 	tmp = ft_strchr(p, '\n');
@@ -37,21 +38,19 @@ char	*free_line(char	*p)
 		return (NULL);
 	len = ft_strlen(++tmp);
 	if (len == 0)
-		return (free(p), NULL);
+		return (free(p), p = NULL, NULL);
 	rest = (char *)malloc(len + 1);
 	if (!rest)
-		return (free(p), NULL);
+		return (free(p), p = NULL, NULL);
 	i = 0;
-	while (len)
+	while (len-- > 0)
 	{
 		rest[i] = tmp[i];
 		i++;
-		len--;
 	}
 	rest[i] = 0;
 	free(p);
-	p = NULL;
-	return (rest);
+	return (p = NULL, rest);
 }
 
 /*retriving the line to be returned*/
@@ -68,7 +67,7 @@ char	*_line_(char *p)
 	len = line - p;
 	line = (char *)malloc(len + 2);
 	if (!line)
-		return (NULL);
+		return (free(p), p = NULL, NULL);
 	i = 0;
 	while (p[i] && len-- > 0)
 	{
@@ -85,6 +84,7 @@ char	*_line_(char *p)
 char	*read_fd(char *p, int fd)
 {
 	char	*tmp;
+	char	*temp;
 	int		bytes;
 
 	bytes = 1;
@@ -95,57 +95,33 @@ char	*read_fd(char *p, int fd)
 	{
 		bytes = read(fd, tmp, BUFFER_SIZE);
 		if (bytes == 0)
-			break;
+			break ;
 		if (bytes < 0)
-			return (free(tmp), free(p), NULL);
+			return (free(tmp), free(p), p = NULL, tmp = NULL, NULL);
 		tmp[bytes] = 0;
+		temp = p;
 		p = ft_strjoin(p, tmp);
+		free(temp);
+		temp = NULL;
 	}
 	free(tmp);
+	tmp = NULL;
 	return (p);
 }
 
 char	*get_next_line(int fd)
 {
-	static	char	*p;
-	char			*line;
+	static char	*p;
+	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL);	
+		return (NULL);
 	p = read_fd(p, fd);
 	if (!p)
 		return (NULL);
 	line = _line_(p);
+	if (!line)
+		return (NULL);
 	p = free_line(p);
 	return (line);
 }
-
-// #define M_
-#ifdef M_
-
-int	main()
-{
-	char	*s;
-	int		fd;
-	
-	fd = open("te.txt", O_RDONLY);
-
-	while (1)
-	{
-		s = get_next_line(fd);
-		if (!s)
-			break;
-		printf("%s", s);
-		// free(s);
-	}
-	// printf("%s", (s = get_next_line(fd)));
-	// printf("%s", (s = get_next_line(fd)));
-	// printf("%s", (s = get_next_line(fd)));
-	// printf("%s", (s = get_next_line(fd)));
-	// printf("%s", (s = get_next_line(fd)));
-	// printf("%s", (s = get_next_line(fd)));
-	// printf("%s", (s = get_next_line(fd)));
-	// printf("%s", (s = get_next_line(fd)));
-	return (0);
-}
-#endif // M
