@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 00:43:42 by mfouadi           #+#    #+#             */
-/*   Updated: 2022/12/23 03:10:54 by mfouadi          ###   ########.fr       */
+/*   Updated: 2022/12/23 03:42:34 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,15 +63,12 @@ char	*_line_(char *p)
 	line = ft_strchr(p, '\n');
 	if (!line)
 		return (p);
-	if (line == p)
-		len = 1;
-	else
-		len = line - p; // same address, return 0 instead should return 1
+	len = line - p;
 	line = (char *)malloc(len + 2);
 	if (!line)
 		return (NULL);
 	i = 0;
-	while (p[i] && len--)
+	while (p[i] && len-- > 0)
 	{
 		line[i] = p[i];
 		i++;
@@ -97,7 +94,7 @@ char	*read_fd(char *p, int fd)
 		if (bytes == 0)
 			break;
 		if (bytes < 0)
-			return (free(tmp), NULL);
+			return (free(tmp), free(p), NULL);
 		tmp[bytes] = 0;
 		p = ft_strjoin(p, tmp); //a 
 		// printf("$ tmp == %s$", p);
@@ -112,7 +109,7 @@ char	*get_next_line(int fd)
 	char			*line;
 
 	// printf("\n%p\n", p);
-	if (fd < 0 || read(fd, 0, 0) < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);	
 	p = read_fd(p, fd);
 	if (!p)
@@ -134,20 +131,20 @@ int	main()
 	
 	fd = open("te.txt", O_RDONLY);
 
-	// while (1)
-	// {
-	// 	s = get_next_line(fd);
-	// 	if (!s)
-	// 		break;
-	// 	printf("%s", s);
-	// 	// free(s);
-	// }
-	printf("%s", (s = get_next_line(fd)));	
-	printf("%s", (s = get_next_line(fd)));	
-	printf("%s", (s = get_next_line(fd)));	
-	printf("%s", (s = get_next_line(fd)));	
-	printf("%s", (s = get_next_line(fd)));	
-	printf("%s", (s = get_next_line(fd)));	
+	while (1)
+	{
+		s = get_next_line(fd);
+		if (!s)
+			break;
+		printf("%s", s);
+		// free(s);
+	}
+	// printf("%s", (s = get_next_line(fd)));	
+	// printf("%s", (s = get_next_line(fd)));	
+	// printf("%s", (s = get_next_line(fd)));	
+	// printf("%s", (s = get_next_line(fd)));	
+	// printf("%s", (s = get_next_line(fd)));	
+	// printf("%s", (s = get_next_line(fd)));	
 	// // free(s);
 	// printf("%s", (s = get_next_line(fd)));	
 	// // free(s);
