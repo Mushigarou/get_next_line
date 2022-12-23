@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 00:43:45 by mfouadi           #+#    #+#             */
-/*   Updated: 2022/12/23 04:41:35 by mfouadi          ###   ########.fr       */
+/*   Updated: 2022/12/23 07:45:14 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,44 +69,30 @@ char	*ft_strdup(const char *s1)
 
 char	*ft_strjoin(char *s1, char *s2)
 {
-	char	*result;
-	int		i;
-	int		j;
-
+	char	*str;
+	size_t	len;
+	
 	if (!s1)
-	{
-		s1 = (char *)malloc(1);
-		if (!s1)
-			return (NULL);
-		s1[0] = '\0';
-	}
-	result = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (!result || !s2)
+		return (ft_strdup(s2));
+	len  = ft_strlen(s1) + ft_strlen(s2);
+	str = (char *)malloc(len + 1);
+	if (!str)
 		return (free(s1), NULL);
-	i = -1;
-	while (s1[++i])
-		result[i] = s1[i];
-	j = 0;
-	while (s2[j])
-		result[i++] = s2[j++];
-	result[ft_strlen(s1) + ft_strlen(s2)] = '\0';
-	return (free(s1), result);
+	str = ft_strcat(s1, s2, str, len);
+	return (str);
 }
 
-// char	*ft_strjoin(char *s1, char *s2)
-// {
-// 	char	*all;
-// 	char	*ptr;
-
-// 	all = malloc(sizeof(char) * ft_strlen(s1) + ft_strlen(s2) + 1);
-// 	if (!all)
-// 		return (NULL);
-// 	ptr = all;
-// 	while (*s1)
-// 		*all ++ = *s1 ++;
-// 	while (*s2)
-// 		*all ++ = *s2 ++;
-// 	*all = '\0';
-// 	free (s1);
-// 	return (ptr);
-// }
+char	*ft_strcat(char *s1, char *s2, char *str, size_t len)
+{
+	int		i;
+	int		j;
+	
+	i = -1;
+	while (s1[++i])
+		str[i] = s1[i];
+	j = 0;
+	while (s2[j])
+		str[i++] = s2[j++];
+	str[len] = '\0';
+	return (free(s1), str);
+}

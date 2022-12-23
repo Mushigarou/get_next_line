@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 00:43:42 by mfouadi           #+#    #+#             */
-/*   Updated: 2022/12/23 03:42:34 by mfouadi          ###   ########.fr       */
+/*   Updated: 2022/12/23 07:50:36 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # endif // BUFFER_SIZE
 
 /*removing the line that was returned for the static var*/
+
 char	*free_line(char	*p)
 {
 	size_t	i;
@@ -39,7 +40,7 @@ char	*free_line(char	*p)
 		return (free(p), NULL);
 	rest = (char *)malloc(len + 1);
 	if (!rest)
-		return (NULL); // maybe freeing p, here
+		return (free(p), NULL);
 	i = 0;
 	while (len)
 	{
@@ -54,6 +55,7 @@ char	*free_line(char	*p)
 }
 
 /*retriving the line to be returned*/
+
 char	*_line_(char *p)
 {
 	size_t	i;
@@ -79,13 +81,14 @@ char	*_line_(char *p)
 }
 
 /*Read from fd untill encountring '\n' or EOF*/
+
 char	*read_fd(char *p, int fd)
 {
 	char	*tmp;
 	int		bytes;
 
 	bytes = 1;
-	tmp = (char *)malloc(BUFFER_SIZE + 1); // 2bytes
+	tmp = (char *)malloc(BUFFER_SIZE + 1);
 	if (!tmp)
 		return (NULL);
 	while (bytes && !ft_strchr(p, '\n'))
@@ -96,8 +99,7 @@ char	*read_fd(char *p, int fd)
 		if (bytes < 0)
 			return (free(tmp), free(p), NULL);
 		tmp[bytes] = 0;
-		p = ft_strjoin(p, tmp); //a 
-		// printf("$ tmp == %s$", p);
+		p = ft_strjoin(p, tmp);
 	}
 	free(tmp);
 	return (p);
@@ -108,21 +110,18 @@ char	*get_next_line(int fd)
 	static	char	*p;
 	char			*line;
 
-	// printf("\n%p\n", p);
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);	
 	p = read_fd(p, fd);
 	if (!p)
 		return (NULL);
 	line = _line_(p);
-	// printf\n ("$p == %s$", p);
 	p = free_line(p);
-	// printf("$p == %s$", p);
 	return (line);
 }
 
-// #define M
-#ifdef M
+// #define M_
+#ifdef M_
 
 int	main()
 {
@@ -139,17 +138,14 @@ int	main()
 		printf("%s", s);
 		// free(s);
 	}
-	// printf("%s", (s = get_next_line(fd)));	
-	// printf("%s", (s = get_next_line(fd)));	
-	// printf("%s", (s = get_next_line(fd)));	
-	// printf("%s", (s = get_next_line(fd)));	
-	// printf("%s", (s = get_next_line(fd)));	
-	// printf("%s", (s = get_next_line(fd)));	
-	// // free(s);
-	// printf("%s", (s = get_next_line(fd)));	
-	// // free(s);
-	// printf("%s", (s = get_next_line(fd)));	
-	// free(s);
+	// printf("%s", (s = get_next_line(fd)));
+	// printf("%s", (s = get_next_line(fd)));
+	// printf("%s", (s = get_next_line(fd)));
+	// printf("%s", (s = get_next_line(fd)));
+	// printf("%s", (s = get_next_line(fd)));
+	// printf("%s", (s = get_next_line(fd)));
+	// printf("%s", (s = get_next_line(fd)));
+	// printf("%s", (s = get_next_line(fd)));
 	return (0);
 }
 #endif // M
