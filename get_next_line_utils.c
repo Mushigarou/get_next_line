@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 00:43:45 by mfouadi           #+#    #+#             */
-/*   Updated: 2022/12/22 10:19:11 by mfouadi          ###   ########.fr       */
+/*   Updated: 2022/12/22 23:30:18 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,29 +67,59 @@ char	*ft_strdup(const char *s1)
 	return (ptr1 - s1_len);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
-	char	*new_str;
-	size_t	len;
-	size_t	i;
+	char	*result;
+	int		i;
+	int		j;
 
-	if (!s1 && !s2)
-		return (NULL);
 	if (!s1)
-		return (ft_strdup(s2));
-	else if (!s2)
-		return (ft_strdup(s1));
-	len = ft_strlen(s1) + ft_strlen(s2);
-	new_str = (char *)malloc(len + NULL_CHAR);
-	if (new_str == NULL)
-		return (new_str);
-	len = 0;
-	i = 0;
-	while (s1[i])
-		new_str[len++] = s1[i++];
-	i = 0;
-	while (s2[i])
-		new_str[len++] = s2[i++];
-	new_str[len] = '\0';
-	return (new_str);
+	{
+		s1 = (char *)malloc(1 * sizeof(char));
+		if (!s1)
+			return (NULL);
+		s1[0] = '\0';
+	}
+	result = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	if (!result || !s2)
+		return (free(s1), NULL);
+	i = -1;
+	while (s1[++i])
+		result[i] = s1[i];
+	j = 0;
+	while (s2[j])
+		result[i++] = s2[j++];
+	result[ft_strlen(s1) + ft_strlen(s2)] = '\0';
+	return (free(s1), result);
 }
+
+// char	*ft_strjoin(char const *s1, char const *s2)
+// {
+// 	char	*new_str;
+// 	size_t	len;
+// 	size_t	i;
+	
+// 	if (!s1)
+// 	{
+// 		s1 = malloc(1);
+// 		s1[0] = '\0';
+// 	}
+// 	if (s1 && s2)
+// 	{	
+// 		len = ft_strlen(s1) + ft_strlen(s2);
+// 		new_str = (char *)malloc(len + NULL_CHAR);
+// 		if (new_str == NULL)
+// 			return (new_str);
+// 		len = 0;
+// 		i = 0;
+// 		while (s1[i])
+// 			new_str[len++] = s1[i++];
+// 		i = 0;
+// 		while (s2[i])
+// 			new_str[len++] = s2[i++];
+// 		new_str[len] = '\0';
+// 		free((char *)s2);
+// 		return (new_str);
+// 		}
+// 	return (NULL);
+// }

@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 00:41:28 by mfouadi           #+#    #+#             */
-/*   Updated: 2022/12/22 10:21:51 by mfouadi          ###   ########.fr       */
+/*   Updated: 2022/12/22 23:30:45 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 
 char	*get_next_line(int fd);
 char	*ft_strchr(const char *s, int c);
-char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_strjoin(char *s1, char  *s2);
 char	*ft_strdup(const char *s1);
 size_t	ft_strlen(const char *s);
 
