@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 00:43:45 by mfouadi           #+#    #+#             */
-/*   Updated: 2022/12/22 23:30:18 by mfouadi          ###   ########.fr       */
+/*   Updated: 2022/12/23 02:55:22 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ size_t	ft_strlen(const char *s)
     if (!s)
         return (0);
 	i = 0;
-	while (*s++ != '\0')
+	while (s[i] != '\0')
 		i++;
 	return (i);
 }
@@ -75,7 +75,7 @@ char	*ft_strjoin(char *s1, char *s2)
 
 	if (!s1)
 	{
-		s1 = (char *)malloc(1 * sizeof(char));
+		s1 = (char *)malloc(1);
 		if (!s1)
 			return (NULL);
 		s1[0] = '\0';

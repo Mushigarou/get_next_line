@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 00:43:42 by mfouadi           #+#    #+#             */
-/*   Updated: 2022/12/23 01:47:42 by mfouadi          ###   ########.fr       */
+/*   Updated: 2022/12/23 03:10:54 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 #include "get_next_line.h"
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 100
+#  define BUFFER_SIZE 1
 # endif // BUFFER_SIZE
 
 /*removing the line that was returned for the static var*/
@@ -33,10 +33,10 @@ char	*free_line(char	*p)
 		return (NULL);
 	tmp = ft_strchr(p, '\n');
 	if (!tmp)
-		return (free(p), NULL);
+		return (NULL);
 	len = ft_strlen(++tmp);
 	if (len == 0)
-		return (NULL);
+		return (free(p), NULL);
 	rest = (char *)malloc(len + 1);
 	if (!rest)
 		return (NULL); // maybe freeing p, here
@@ -49,6 +49,7 @@ char	*free_line(char	*p)
 	}
 	rest[i] = 0;
 	free(p);
+	p = NULL;
 	return (rest);
 }
 
@@ -62,8 +63,10 @@ char	*_line_(char *p)
 	line = ft_strchr(p, '\n');
 	if (!line)
 		return (p);
-	len = line - p;
-
+	if (line == p)
+		len = 1;
+	else
+		len = line - p; // same address, return 0 instead should return 1
 	line = (char *)malloc(len + 2);
 	if (!line)
 		return (NULL);
@@ -85,7 +88,7 @@ char	*read_fd(char *p, int fd)
 	int		bytes;
 
 	bytes = 1;
-	tmp = (char *)malloc(BUFFER_SIZE + 1);
+	tmp = (char *)malloc(BUFFER_SIZE + 1); // 2bytes
 	if (!tmp)
 		return (NULL);
 	while (bytes && !ft_strchr(p, '\n'))
@@ -96,7 +99,7 @@ char	*read_fd(char *p, int fd)
 		if (bytes < 0)
 			return (free(tmp), NULL);
 		tmp[bytes] = 0;
-		p = ft_strjoin(p, tmp);
+		p = ft_strjoin(p, tmp); //a 
 		// printf("$ tmp == %s$", p);
 	}
 	free(tmp);
@@ -121,7 +124,7 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-#define M
+// #define M
 #ifdef M
 
 int	main()
@@ -131,15 +134,20 @@ int	main()
 	
 	fd = open("te.txt", O_RDONLY);
 
-	while (1)
-	{
-		s = get_next_line(fd);
-		if (!s)
-			break;
-		printf("%s", s);
-		// free(s);
-	}
-	// printf("%s", (s = get_next_line(fd)));	
+	// while (1)
+	// {
+	// 	s = get_next_line(fd);
+	// 	if (!s)
+	// 		break;
+	// 	printf("%s", s);
+	// 	// free(s);
+	// }
+	printf("%s", (s = get_next_line(fd)));	
+	printf("%s", (s = get_next_line(fd)));	
+	printf("%s", (s = get_next_line(fd)));	
+	printf("%s", (s = get_next_line(fd)));	
+	printf("%s", (s = get_next_line(fd)));	
+	printf("%s", (s = get_next_line(fd)));	
 	// // free(s);
 	// printf("%s", (s = get_next_line(fd)));	
 	// // free(s);
