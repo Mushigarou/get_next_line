@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/03 00:43:42 by mfouadi           #+#    #+#             */
-/*   Updated: 2022/12/24 02:07:48 by mfouadi          ###   ########.fr       */
+/*   Created: 2022/12/24 01:33:03 by mfouadi           #+#    #+#             */
+/*   Updated: 2022/12/24 01:41:28 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
  * occurred
 */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 #ifndef BUFFER_SIZE
 # define BUFFER_SIZE 100000
@@ -111,17 +111,39 @@ char	*read_fd(char *p, int fd)
 
 char	*get_next_line(int fd)
 {
-	static char	*p;
+	static char	*p[OPEN_MAX];
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	p = read_fd(p, fd);
-	if (!p)
+	p[fd] = read_fd(p[fd], fd);
+	if (!p[fd])
 		return (NULL);
-	line = _line_(p);
+	line = _line_(p[fd]);
 	if (!line)
 		return (NULL);
-	p = free_line(p);
+	p[fd] = free_line(p[fd]);
 	return (line);
 }
+
+// int main()
+// {
+// 	char	*s;
+// 	char	*x;
+// 	char	*k;
+// 	int	fd = open("te.txt", O_RDONLY);
+// 	int	f = open("t.txt", O_RDONLY);
+// 	int	t = open("get_next_line_utils.c", O_RDONLY);\
+
+// 	while (1)
+// 	{
+// 		while ((s = get_next_line(fd)))
+// 			printf("te.txt : %s", s);
+// 		while ((x =get_next_line(f)))
+// 			printf("t.txt : %s", x);
+// 		while ((k =get_next_line(t)))
+// 			printf("get_next_line_utils.txt : %s", k);
+//         if (!s && !k && !x)
+// 			break;
+// 	}
+// }
