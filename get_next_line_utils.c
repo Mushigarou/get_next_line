@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 00:43:45 by mfouadi           #+#    #+#             */
-/*   Updated: 2022/12/24 02:07:09 by mfouadi          ###   ########.fr       */
+/*   Updated: 2022/12/28 04:54:11 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	len = ft_strlen(s1) + ft_strlen(s2);
 	new_str = (char *)malloc(len + 1);
 	if (!new_str)
-		return (NULL);
+		return (free(s1), NULL);
 	new_str = ft_strcat(s1, s2, new_str, len);
 	return (new_str);
 }

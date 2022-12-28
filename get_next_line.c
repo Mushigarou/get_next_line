@@ -6,7 +6,7 @@
 /*   By: mfouadi <mfouadi@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 00:43:42 by mfouadi           #+#    #+#             */
-/*   Updated: 2022/12/24 02:07:48 by mfouadi          ###   ########.fr       */
+/*   Updated: 2022/12/28 06:21:54 by mfouadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,10 @@ char	*free_line(char	*p)
 		return (NULL);
 	len = ft_strlen(++tmp);
 	if (len == 0)
-		return (free(p), p = NULL, NULL);
+		return (free(p), NULL);
 	rest = (char *)malloc(len + 1);
 	if (!rest)
-		return (free(p), p = NULL, NULL);
+		return (free(p), NULL);
 	i = 0;
 	while (len-- > 0)
 	{
@@ -50,7 +50,7 @@ char	*free_line(char	*p)
 	}
 	rest[i] = 0;
 	free(p);
-	return (p = NULL, rest);
+	return (rest);
 }
 
 /*retriving the line to be returned*/
@@ -67,7 +67,7 @@ char	*_line_(char *p)
 	len = line - p;
 	line = (char *)malloc(len + 2);
 	if (!line)
-		return (free(p), p = NULL, NULL);
+		return (free(p), NULL);
 	i = 0;
 	while (p[i] && len-- > 0)
 	{
@@ -81,7 +81,7 @@ char	*_line_(char *p)
 
 /*Read from fd untill encountring '\n' or EOF*/
 
-char	*read_fd(char *p, int fd)
+void read_fd(char **p, int fd)
 {
 	char	*tmp;
 	char	*temp;
@@ -90,23 +90,26 @@ char	*read_fd(char *p, int fd)
 	bytes = 1;
 	tmp = (char *)malloc(BUFFER_SIZE + 1);
 	if (!tmp)
-		return (NULL);
-	while (bytes && !ft_strchr(p, '\n'))
+		return (free(*p), *p = NULL ,(void)0);
+	while (bytes)
 	{
 		bytes = read(fd, tmp, BUFFER_SIZE);
 		if (bytes == 0)
 			break ;
 		if (bytes < 0)
-			return (free(tmp), free(p), p = NULL, tmp = NULL, NULL);
+			return (free(tmp), *p = NULL ,(void)0);
 		tmp[bytes] = 0;
-		temp = p;
-		p = ft_strjoin(p, tmp);
+		temp = *p;
+		*p = ft_strjoin(*p, tmp);
+		if (!*p)
+			return (free(tmp),free(*p), *p = NULL ,(void)0);
 		free(temp);
+		if (ft_strchr(*p, '\n'))
+			return (free(tmp), tmp = NULL, (void)NULL) ;
 		temp = NULL;
 	}
 	free(tmp);
 	tmp = NULL;
-	return (p);
 }
 
 char	*get_next_line(int fd)
@@ -116,12 +119,44 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	p = read_fd(p, fd);
+	char *tmp;
+	tmp = p;
+	read_fd(&p, fd);
 	if (!p)
 		return (NULL);
 	line = _line_(p);
 	if (!line)
 		return (NULL);
+	if (!p)
+		return free(tmp), NULL;
 	p = free_line(p);
 	return (line);
 }
+// #define M
+#ifdef M
+int main(void)
+{
+	int fd = open("file" , O_RDONLY);
+	char *s = get_next_line(fd);
+	printf("line| %s", s);
+	free(s);
+	s= get_next_line(fd);
+	printf("line| %s", s);
+	free(s);
+	s= get_next_line(fd);
+	free(s);
+	s= get_next_line(fd);
+	free(s);
+	s= get_next_line(fd);
+	free(s);
+	s= get_next_line(fd);
+	free(s);
+	s= get_next_line(fd);
+	free(s);
+	s= get_next_line(fd);
+	free(s);
+	s= get_next_line(fd);
+	free(s);
+	return 0;
+}
+#endif
