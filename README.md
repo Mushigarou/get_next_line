@@ -16,9 +16,6 @@ char	*get_next_line(int fd);
 ```
 You can choose the default value for the buffer size by not giving the `-D` flag.
 
-## Static Variable
-
-
 ## Multiple File Descriptors
 The get_next_line (Bonus) function can handle multiple file descriptors simultaneously. This means you can read from different file descriptors in separate calls without losing the reading thread of each file descriptor or returning a line from another file descriptor.
 
